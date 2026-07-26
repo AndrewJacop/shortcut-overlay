@@ -56,20 +56,25 @@ fn position_overlay(app: &tauri::AppHandle, cfg: &UserConfig) {
         return;
     };
 
-    let ow = cfg.overlay.width;
-    let oh = cfg.overlay.height;
-
-    let (x, y) = config::compute_overlay_position(
-        mon_x,
-        mon_y,
-        mon_w,
-        mon_h,
-        ow,
-        oh,
-        &cfg.overlay.position,
-        cfg.overlay.offset_x,
-        cfg.overlay.offset_y,
-    );
+    // Fullscreen: fill the whole selected monitor, ignore anchor/offset/size.
+    let (ow, oh, x, y) = if cfg.overlay.fullscreen {
+        (mon_w, mon_h, mon_x, mon_y)
+    } else {
+        let ow = cfg.overlay.width;
+        let oh = cfg.overlay.height;
+        let (x, y) = config::compute_overlay_position(
+            mon_x,
+            mon_y,
+            mon_w,
+            mon_h,
+            ow,
+            oh,
+            &cfg.overlay.position,
+            cfg.overlay.offset_x,
+            cfg.overlay.offset_y,
+        );
+        (ow, oh, x, y)
+    };
 
     let _ = w.set_size(LogicalSize::new(ow, oh));
     let _ = w.set_position(LogicalPosition::new(x, y));

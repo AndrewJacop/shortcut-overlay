@@ -52,6 +52,10 @@ pub struct OverlayConfig {
     /// Background opacity of the overlay card, 0.0 (invisible) – 1.0 (opaque).
     #[serde(default = "default_opacity")]
     pub opacity: f64,
+    /// When true, the overlay fills the whole selected monitor and
+    /// position/offset/width/height are ignored.
+    #[serde(default)]
+    pub fullscreen: bool,
 }
 
 fn default_width() -> f64 {
@@ -74,6 +78,7 @@ impl Default for OverlayConfig {
             width: default_width(),
             height: default_height(),
             opacity: default_opacity(),
+            fullscreen: false,
         }
     }
 }

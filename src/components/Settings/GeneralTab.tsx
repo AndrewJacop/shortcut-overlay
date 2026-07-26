@@ -69,6 +69,16 @@ const GeneralTab: FC = () => {
 		[currentConfig, updateConfig],
 	);
 
+	const handleFullscreenChange = useCallback(
+		async (fullscreen: boolean) => {
+			if (!currentConfig) return;
+			await updateConfig({
+				overlay: { ...currentConfig.overlay, fullscreen },
+			});
+		},
+		[currentConfig, updateConfig],
+	);
+
 	// Debounced handlers for number inputs (avoid spamming config writes)
 	const handleSizeChange = useDebouncedCallback(
 		async (field: "width" | "height", value: number) => {
@@ -181,10 +191,16 @@ const GeneralTab: FC = () => {
 								<span className="text-sm text-zinc-600 dark:text-zinc-300 block mb-2">
 									Anchor
 								</span>
-								<PositionPicker
-									value={overlay.position}
-									onChange={(p) => void handlePositionChange(p)}
-								/>
+								<div
+									className={
+										overlay.fullscreen ? "opacity-40 pointer-events-none" : ""
+									}
+								>
+									<PositionPicker
+										value={overlay.position}
+										onChange={(p) => void handlePositionChange(p)}
+									/>
+								</div>
 							</div>
 							<div>
 								<span className="text-sm text-zinc-600 dark:text-zinc-300 block mb-2">
@@ -194,11 +210,24 @@ const GeneralTab: FC = () => {
 									value={overlay.monitor}
 									onChange={(m) => void handleMonitorChange(m)}
 								/>
+								<label className="flex items-center gap-2 mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+									<input
+										type="checkbox"
+										checked={overlay.fullscreen}
+										onChange={(e) =>
+											void handleFullscreenChange(e.target.checked)
+										}
+										className="accent-blue-600"
+									/>
+									Fullscreen
+								</label>
 							</div>
 						</div>
 
 						{/* Size controls */}
-						<div className="flex items-center gap-6">
+						<div
+							className={`flex items-center gap-6 ${overlay.fullscreen ? "opacity-40 pointer-events-none" : ""}`}
+						>
 							<div className="flex items-center gap-2">
 								<span className="text-sm text-zinc-600 dark:text-zinc-300">
 									Width
@@ -240,7 +269,9 @@ const GeneralTab: FC = () => {
 						</div>
 
 						{/* Offset controls */}
-						<div className="flex items-center gap-6">
+						<div
+							className={`flex items-center gap-6 ${overlay.fullscreen ? "opacity-40 pointer-events-none" : ""}`}
+						>
 							<div className="flex items-center gap-2">
 								<span className="text-sm text-zinc-600 dark:text-zinc-300">
 									Offset X
