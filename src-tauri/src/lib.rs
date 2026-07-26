@@ -47,6 +47,51 @@ fn resolve_monitor(app: &tauri::AppHandle, target: &MonitorTarget) -> Option<(f6
     Some((x, y, w, h))
 }
 
+/// Tell Windows DWM which corner style to use.
+/// Windows 11 rounds every window's corners by default, which bleeds through
+/// a transparent borderless overlay. We force square when fullscreen and let
+/// the default (round) apply otherwise. No-op on non-Windows.
+#[cfg(windows)]
+fn set_corner_preference(hwnd: isize, square: bool) {
+    // DWMWA_WINDOW_CORNER_PREFERENCE = 33; DWMWCP_RECT = 1 (square), DWMWCP_DEFAULT = 0.
+    use windows_sys::Win32::Graphics::Dwm::{DwmSetWindowAttribute, DWMWA_WINDOW_CORNER_PREFERENCE};
+    let pref: i32 = if square { 1 } else { 0 };
+    unsafe {
+        let _ = DwmSetWindowAttribute(
+            hwnd as _,
+            DWMWA_WINDOW_CORNER_PREFERENCE as _,
+            &pref as *const _ as _,
+            std::mem::size_of::<i32>() as _,
+        );
+    }
+}
+
+/// Compensate for tao's undecorated-shadow inset: on Windows a transparent
+/// borderless window has an invisible shadow border, so `set_position` places
+/// the *outer* frame at the target but the visible client area lands inset.
+/// We measure the real client origin via ClientToScreen(0,0) and shift the
+/// outer position so the client lands exactly at (target_x, target_y).
+/// No-op on non-Windows.
+#[cfg(windows)]
+fn shift_to_client_origin(w: &tauri::WebviewWindow, target_x: f64, target_y: f64) {
+    use windows_sys::Win32::Foundation::POINT;
+    use windows_sys::Win32::Graphics::Gdi::ClientToScreen;
+    let Ok(hwnd) = w.hwnd() else { return };
+    let hwnd = hwnd.0 as isize;
+    let scale = w.scale_factor().unwrap_or(1.0);
+    unsafe {
+        let mut origin = POINT { x: 0, y: 0 };
+        // BOOL is i32: nonzero = success.
+        if ClientToScreen(hwnd as _, &mut origin) != 0 {
+            let dx = target_x - (origin.x as f64 / scale);
+            let dy = target_y - (origin.y as f64 / scale);
+            if dx != 0.0 || dy != 0.0 {
+                let _ = w.set_position(tauri::LogicalPosition::new(target_x + dx, target_y + dy));
+            }
+        }
+    }
+}
+
 /// Resize and reposition the overlay window according to the current config.
 fn position_overlay(app: &tauri::AppHandle, cfg: &UserConfig) {
     let Some(w) = app.get_webview_window("main") else {
@@ -78,6 +123,16 @@ fn position_overlay(app: &tauri::AppHandle, cfg: &UserConfig) {
 
     let _ = w.set_size(LogicalSize::new(ow, oh));
     let _ = w.set_position(LogicalPosition::new(x, y));
+
+    #[cfg(windows)]
+    {
+        // Corner preference: square when fullscreen, default (round) otherwise.
+        // Also fix the shadow inset so the visible client area sits at (x, y).
+        if let Ok(h) = w.hwnd() {
+            set_corner_preference(h.0 as isize, cfg.overlay.fullscreen);
+        }
+        shift_to_client_origin(&w, x, y);
+    }
 }
 
 /// Show the overlay: reposition (in case config or monitor changed), then focus.
