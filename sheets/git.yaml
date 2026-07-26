@@ -1,0 +1,170 @@
+app: git
+display_name: git
+version: "1.0.0"
+author: "community"
+icon:
+  type: url
+  value: "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png"
+
+match:
+  - git
+
+pages:
+  - name: Basics
+    shortcuts:
+      - keys: ["git", "init"]
+        description: Initialize a new repository
+        tags: [init]
+      - keys: ["git", "clone", "<url>"]
+        description: Clone a remote repository
+        tags: [clone]
+      - keys: ["git", "status"]
+        description: Show working tree status
+        tags: [status]
+      - keys: ["git", "add", "."]
+        description: Stage all changes
+        tags: [stage]
+      - keys: ["git", "add", "<file>"]
+        description: Stage specific file
+        tags: [stage]
+      - keys: ["git", "commit", "-m", "\"msg\""]
+        description: Commit staged changes with message
+        tags: [commit]
+      - keys: ["git", "commit", "-am", "\"msg\""]
+        description: Stage tracked files and commit
+        tags: [commit]
+      - keys: ["git", "reset", "<file>"]
+        description: Unstage a file
+        tags: [stage, undo]
+      - keys: ["git", "reset", "--soft", "HEAD~1"]
+        description: Undo last commit, keep changes staged
+        tags: [commit, undo]
+      - keys: ["git", "checkout", "--", "<file>"]
+        description: Discard unstaged changes in file
+        tags: [undo]
+
+  - name: Branching
+    shortcuts:
+      - keys: ["git", "branch"]
+        description: List local branches
+        tags: [branch, list]
+      - keys: ["git", "branch", "<name>"]
+        description: Create a new branch
+        tags: [branch, create]
+      - keys: ["git", "checkout", "<branch>"]
+        description: Switch to a branch
+        tags: [branch, navigate]
+      - keys: ["git", "checkout", "-b", "<name>"]
+        description: Create and switch to new branch
+        tags: [branch, create]
+      - keys: ["git", "switch", "<branch>"]
+        description: Switch to a branch (newer syntax)
+        tags: [branch, navigate]
+      - keys: ["git", "switch", "-c", "<name>"]
+        description: Create and switch to new branch
+        tags: [branch, create]
+      - keys: ["git", "merge", "<branch>"]
+        description: Merge branch into current
+        tags: [branch, merge]
+      - keys: ["git", "branch", "-d", "<name>"]
+        description: Delete a merged branch
+        tags: [branch, delete]
+      - keys: ["git", "branch", "-D", "<name>"]
+        description: Force delete a branch
+        tags: [branch, delete]
+      - keys: ["git", "rebase", "<branch>"]
+        description: Rebase current branch onto another
+        tags: [branch, rebase]
+
+  - name: Stash & Clean
+    shortcuts:
+      - keys: ["git", "stash"]
+        description: Stash current changes
+        tags: [stash]
+      - keys: ["git", "stash", "pop"]
+        description: Apply and remove latest stash
+        tags: [stash]
+      - keys: ["git", "stash", "apply"]
+        description: Apply latest stash without removing
+        tags: [stash]
+      - keys: ["git", "stash", "list"]
+        description: List all stashes
+        tags: [stash, list]
+      - keys: ["git", "stash", "drop"]
+        description: Remove latest stash
+        tags: [stash, delete]
+      - keys: ["git", "stash", "push", "-m", "\"msg\""]
+        description: Stash with a message
+        tags: [stash]
+      - keys: ["git", "clean", "-f"]
+        description: Remove untracked files
+        tags: [clean]
+      - keys: ["git", "clean", "-fd"]
+        description: Remove untracked files and directories
+        tags: [clean]
+      - keys: ["git", "clean", "-fdn"]
+        description: "Dry run: show what would be removed"
+        tags: [clean]
+
+  - name: History & Diff
+    shortcuts:
+      - keys: ["git", "log"]
+        description: Show commit history
+        tags: [log]
+      - keys: ["git", "log", "--oneline"]
+        description: Compact one-line commit history
+        tags: [log]
+      - keys: ["git", "log", "--graph", "--oneline"]
+        description: Graph view of commit history
+        tags: [log]
+      - keys: ["git", "diff"]
+        description: Show unstaged changes
+        tags: [diff]
+      - keys: ["git", "diff", "--staged"]
+        description: Show staged changes
+        tags: [diff]
+      - keys: ["git", "diff", "<branch1>", "<branch2>"]
+        description: Compare two branches
+        tags: [diff]
+      - keys: ["git", "show", "<commit>"]
+        description: Show details of a commit
+        tags: [log]
+      - keys: ["git", "blame", "<file>"]
+        description: Show who changed each line
+        tags: [log]
+      - keys: ["git", "reflog"]
+        description: Show reference log (all HEAD moves)
+        tags: [log, undo]
+
+  - name: Remote
+    shortcuts:
+      - keys: ["git", "remote", "-v"]
+        description: List remote repositories
+        tags: [remote, list]
+      - keys: ["git", "remote", "add", "<name>", "<url>"]
+        description: Add a remote
+        tags: [remote, add]
+      - keys: ["git", "fetch"]
+        description: Download remote changes (no merge)
+        tags: [remote, fetch]
+      - keys: ["git", "fetch", "--all"]
+        description: Fetch from all remotes
+        tags: [remote, fetch]
+      - keys: ["git", "pull"]
+        description: Fetch and merge remote branch
+        tags: [remote, pull]
+      - keys: ["git", "pull", "--rebase"]
+        description: Fetch and rebase on remote branch
+        tags: [remote, pull]
+      - keys: ["git", "push"]
+        description: Push commits to remote
+        tags: [remote, push]
+      - keys: ["git", "push", "-u", "origin", "<branch>"]
+        description: Push and set upstream tracking
+        tags: [remote, push]
+      - keys: ["git", "push", "--force"]
+        description: Force push (use with caution)
+        tags: [remote, push]
+      - keys: ["git", "remote", "remove", "<name>"]
+        description: Remove a remote
+        tags: [remote, delete]

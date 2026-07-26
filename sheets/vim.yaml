@@ -1,0 +1,182 @@
+app: vim
+display_name: vim
+version: "1.0.0"
+author: "community"
+icon: "📝"
+
+match:
+  - vim
+  - nvim
+  - neovim
+
+pages:
+  - name: Normal Mode
+    shortcuts:
+      - keys: ["h"]
+        description: Move cursor left
+        tags: [motion]
+      - keys: ["j"]
+        description: Move cursor down
+        tags: [motion]
+      - keys: ["k"]
+        description: Move cursor up
+        tags: [motion]
+      - keys: ["l"]
+        description: Move cursor right
+        tags: [motion]
+      - keys: ["w"]
+        description: Move to start of next word
+        tags: [motion, word]
+      - keys: ["b"]
+        description: Move to start of previous word
+        tags: [motion, word]
+      - keys: ["0"]
+        description: Move to start of line
+        tags: [motion, line]
+      - keys: ["$"]
+        description: Move to end of line
+        tags: [motion, line]
+      - keys: ["Ctrl+D"]
+        description: Scroll half page down
+        tags: [motion, scroll]
+      - keys: ["Ctrl+U"]
+        description: Scroll half page up
+        tags: [motion, scroll]
+      - keys: ["Ctrl+F"]
+        description: Scroll full page down
+        tags: [motion, scroll]
+      - keys: ["Ctrl+B"]
+        description: Scroll full page up
+        tags: [motion, scroll]
+
+  - name: Insert Mode
+    shortcuts:
+      - keys: ["i"]
+        description: Insert before cursor
+        tags: [insert]
+      - keys: ["a"]
+        description: Append after cursor
+        tags: [insert]
+      - keys: ["I"]
+        description: Insert at beginning of line
+        tags: [insert]
+      - keys: ["A"]
+        description: Append at end of line
+        tags: [insert]
+      - keys: ["o"]
+        description: Open new line below and insert
+        tags: [insert]
+      - keys: ["O"]
+        description: Open new line above and insert
+        tags: [insert]
+      - keys: ["Esc"]
+        description: Exit insert mode
+        tags: [insert, exit]
+      - keys: ["Ctrl+C"]
+        description: Exit insert mode (alternative)
+        tags: [insert, exit]
+      - keys: ["Ctrl+W"]
+        description: Delete word before cursor (in insert)
+        tags: [insert, edit]
+      - keys: ["Ctrl+U"]
+        description: Delete to start of line (in insert)
+        tags: [insert, edit]
+
+  - name: Visual Mode
+    shortcuts:
+      - keys: ["v"]
+        description: Enter character-wise visual mode
+        tags: [visual]
+      - keys: ["V"]
+        description: Enter line-wise visual mode
+        tags: [visual]
+      - keys: ["Ctrl+V"]
+        description: Enter block-wise visual mode
+        tags: [visual]
+      - keys: ["Esc"]
+        description: Exit visual mode
+        tags: [visual, exit]
+      - keys: ["o"]
+        description: Move cursor to other end of selection
+        tags: [visual, navigate]
+      - keys: ["d"]
+        description: Delete selection
+        tags: [visual, edit]
+      - keys: ["y"]
+        description: Yank (copy) selection
+        tags: [visual, copy]
+      - keys: [">"]
+        description: Indent selection right
+        tags: [visual, edit]
+      - keys: ["<"]
+        description: Indent selection left
+        tags: [visual, edit]
+      - keys: ["~"]
+        description: Toggle case of selection
+        tags: [visual, edit]
+
+  - name: Search & Replace
+    shortcuts:
+      - keys: ["/"]
+        description: Search forward
+        tags: [search]
+      - keys: ["?"]
+        description: Search backward
+        tags: [search]
+      - keys: ["n"]
+        description: Repeat search forward
+        tags: [search]
+      - keys: ["N"]
+        description: Repeat search backward
+        tags: [search]
+      - keys: ["*"]
+        description: Search forward for word under cursor
+        tags: [search]
+      - keys: ["#"]
+        description: Search backward for word under cursor
+        tags: [search]
+      - keys: [":", "s/old/new/"]
+        description: Substitute first occurrence on current line
+        tags: [search, replace]
+      - keys: [":", "s/old/new/g"]
+        description: Substitute all occurrences on current line
+        tags: [search, replace]
+      - keys: [":", "%s/old/new/g"]
+        description: Substitute all occurrences in file
+        tags: [search, replace]
+      - keys: [":", "%s/old/new/gc"]
+        description: Substitute all in file with confirmation
+        tags: [search, replace]
+
+  - name: Splits & Tabs
+    shortcuts:
+      - keys: ["Ctrl+W", "s"]
+        description: Split window horizontally
+        tags: [split]
+      - keys: ["Ctrl+W", "v"]
+        description: Split window vertically
+        tags: [split]
+      - keys: ["Ctrl+W", "h"]
+        description: Move to left split
+        tags: [split, navigate]
+      - keys: ["Ctrl+W", "j"]
+        description: Move to split below
+        tags: [split, navigate]
+      - keys: ["Ctrl+W", "k"]
+        description: Move to split above
+        tags: [split, navigate]
+      - keys: ["Ctrl+W", "l"]
+        description: Move to right split
+        tags: [split, navigate]
+      - keys: ["Ctrl+W", "q"]
+        description: Close current split
+        tags: [split, close]
+      - keys: [":", "tabnew"]
+        description: Open new tab
+        tags: [tab]
+      - keys: ["g", "t"]
+        description: Switch to next tab
+        tags: [tab, navigate]
+      - keys: ["g", "T"]
+        description: Switch to previous tab
+        tags: [tab, navigate]

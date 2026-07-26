@@ -1,0 +1,151 @@
+app: tmux
+display_name: tmux
+version: "1.0.0"
+author: "community"
+icon: "🖥️"
+
+match:
+  - tmux
+  - tmux:server
+
+pages:
+  - name: Sessions
+    shortcuts:
+      - keys: ["Ctrl+B", "D"]
+        description: Detach from session
+        tags: [session, detach]
+      - keys: ["Ctrl+B", "$"]
+        description: Rename session
+        tags: [session, rename]
+      - keys: ["Ctrl+B", "S"]
+        description: List sessions
+        tags: [session, list]
+      - keys: ["Ctrl+B", "("]
+        description: Previous session
+        tags: [session, navigate]
+      - keys: ["Ctrl+B", ")"]
+        description: Next session
+        tags: [session, navigate]
+      - keys: ["Ctrl+B", "L"]
+        description: Switch to last session
+        tags: [session, navigate]
+      - keys: ["Ctrl+B", "F"]
+        description: Find session by name
+        tags: [session, search]
+      - keys: ["Ctrl+B", ":"]
+        description: Command prompt
+        tags: [session, command]
+
+  - name: Panes
+    shortcuts:
+      - keys: ["Ctrl+B", "%"]
+        description: Split pane vertically (side by side)
+        tags: [pane, split]
+      - keys: ["Ctrl+B", "\""]
+        description: Split pane horizontally (stacked)
+        tags: [pane, split]
+      - keys: ["Ctrl+B", "↑"]
+        description: Switch to pane above
+        tags: [pane, navigate]
+      - keys: ["Ctrl+B", "↓"]
+        description: Switch to pane below
+        tags: [pane, navigate]
+      - keys: ["Ctrl+B", "←"]
+        description: Switch to pane left
+        tags: [pane, navigate]
+      - keys: ["Ctrl+B", "→"]
+        description: Switch to pane right
+        tags: [pane, navigate]
+      - keys: ["Ctrl+B", "X"]
+        description: Close current pane
+        tags: [pane, close]
+      - keys: ["Ctrl+B", "Z"]
+        description: Toggle pane zoom (fullscreen)
+        tags: [pane, zoom]
+      - keys: ["Ctrl+B", "Q"]
+        description: Show pane numbers
+        tags: [pane, navigate]
+      - keys: ["Ctrl+B", "O"]
+        description: Cycle to next pane
+        tags: [pane, navigate]
+      - keys: ["Ctrl+B", "{"]
+        description: Swap pane with previous
+        tags: [pane, swap]
+      - keys: ["Ctrl+B", "}"]
+        description: Swap pane with next
+        tags: [pane, swap]
+      - keys: ["Ctrl+B", "!"]
+        description: Break pane into new window
+        tags: [pane, window]
+
+  - name: Windows
+    shortcuts:
+      - keys: ["Ctrl+B", "C"]
+        description: Create new window
+        tags: [window, create]
+      - keys: ["Ctrl+B", "N"]
+        description: Next window
+        tags: [window, navigate]
+      - keys: ["Ctrl+B", "P"]
+        description: Previous window
+        tags: [window, navigate]
+      - keys: ["Ctrl+B", "0"]
+        description: Switch to window 0
+        tags: [window, navigate]
+      - keys: ["Ctrl+B", "1"]
+        description: Switch to window 1
+        tags: [window, navigate]
+      - keys: ["Ctrl+B", "2"]
+        description: Switch to window 2
+        tags: [window, navigate]
+      - keys: ["Ctrl+B", "&"]
+        description: Close current window
+        tags: [window, close]
+      - keys: ["Ctrl+B", ","]
+        description: Rename window
+        tags: [window, rename]
+      - keys: ["Ctrl+B", "W"]
+        description: Choose window from list
+        tags: [window, list]
+      - keys: ["Ctrl+B", "F"]
+        description: Find window by name
+        tags: [window, search]
+
+  - name: Copy Mode
+    shortcuts:
+      - keys: ["Ctrl+B", "["]
+        description: Enter copy mode
+        tags: [copy, enter]
+      - keys: ["Ctrl+B", "]"]
+        description: Paste from buffer
+        tags: [copy, paste]
+      - keys: ["Q"]
+        description: Quit copy mode
+        tags: [copy, exit]
+      - keys: ["Space"]
+        description: Begin selection
+        tags: [copy, select]
+      - keys: ["Enter"]
+        description: Copy selection and exit
+        tags: [copy, select]
+      - keys: ["Ctrl+B", "="]
+        description: Choose buffer to paste from
+        tags: [copy, buffer]
+
+  - name: Misc
+    shortcuts:
+      - keys: ["Ctrl+B", "?"]
+        description: List all keybindings
+        tags: [help, keys]
+      - keys: ["Ctrl+B", "T"]
+        description: Show clock
+        tags: [misc, clock]
+      - keys: ["Ctrl+B", "R"]
+        description: Force redraw of client
+        tags: [misc, redraw]
+      - keys: ["Ctrl+B", ":"]
+        description: Enter command mode
+        tags: [misc, command]
+      - keys: ["Ctrl+B", "~"]
+        description: Show messages
+        tags: [misc, messages]

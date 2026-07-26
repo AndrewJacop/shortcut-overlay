@@ -1,0 +1,68 @@
+# sheets/_schema.yaml — canonical schema reference for sheet authors
+#
+# This file documents the full YAML schema for shortcut sheets.
+# It is NOT loaded by the application — it exists purely as a reference.
+# For real examples, see tmux.yaml, vim.yaml, git.yaml alongside this file.
+
+# Required. Unique identifier for the application.
+# Must be lowercase with no spaces. Used as the sheet ID.
+app: tmux
+
+# Required. Human-readable name displayed in the overlay UI.
+display_name: tmux
+
+# Optional. Semantic version of this sheet file.
+version: "1.0.0"
+
+# Optional. Author or contributor attribution.
+author: "community"
+
+# Optional. Application icon displayed in the overlay header.
+# Supports multiple icon types:
+icon:
+  type: url                        # "url" | "path" | "emoji" | "bundled"
+  value: "https://..."
+# Shorthand emoji form is also accepted:
+# icon: "🖥️"
+
+# Optional. Process names used for auto-detection in v1.0.
+# When the active window matches one of these, the sheet is suggested.
+match:
+  - tmux
+  - tmux:server
+
+# Required. Array of pages, each displayed as a tab in the overlay.
+pages:
+  - # Required. Tab label shown in the page navigation.
+    name: Sessions
+
+    # Required. Array of shortcuts for this page.
+    shortcuts:
+      - # Required. Array of key strings.
+        # When the array has multiple entries, they represent a SEQUENCE:
+        # press the first, then the second. Displayed with arrows between.
+        # Example: ["Ctrl+B", "D"] → [Ctrl+B] → [D]
+        keys: ["Ctrl+B", "D"]
+
+        # Required. Human-readable description.
+        description: Detach from session
+
+        # Optional. Tags for filtering and search.
+        tags: [session, detach]
+
+      - # When the array has a single entry containing +, it's a CHORD:
+        # all keys pressed simultaneously. No arrow between badges.
+        # Example: ["Ctrl+B+$"] → [Ctrl+B+$]
+        keys: ["Ctrl+B+$"]
+        description: Rename session
+        tags: [session]
+
+  - name: Panes
+    shortcuts:
+      - keys: ["Ctrl+B", "%"]
+        description: Split pane vertically
+        tags: [pane, split]
+
+      - keys: ["Ctrl+B", "\""]
+        description: Split pane horizontally
+        tags: [pane, split]
