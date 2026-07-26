@@ -1,0 +1,33 @@
+name: release
+
+# Builds installers and publishes a GitHub Release when a tag is pushed.
+# Tags arrive from the private shortcut-overlay-dev repo's sync workflow.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Build & publish release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'ShortcutOverlay ${{ github.ref_name }}'
+          releaseBody: 'Download the installer for your platform from the assets below.'
+          releaseDraft: false
+          prerelease: false
