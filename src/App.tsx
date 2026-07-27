@@ -15,9 +15,11 @@ function App() {
 		sheet,
 		setAllSheets,
 		switchSheet,
+		loadSheet,
 		setOverlayOpacity,
 		setAllFullSheets,
 		setCurrentConfig,
+		setSwitcherOpen,
 		currentConfig,
 	} = useOverlayStore();
 
@@ -121,6 +123,25 @@ function App() {
 			promise.then((unlisten) => unlisten());
 		};
 	}, [isSettingsWindow, setAllSheets, setAllFullSheets, switchSheet]);
+
+	// Overlay window: Rust runs pin → detect → manual on each hotkey-triggered
+	// show and emits the matched sheet ids. Apply: exactly 1 → switch to it,
+	// >1 → open the switcher, 0 → keep the current sheet (manual / fallback).
+	useEffect(() => {
+		if (isSettingsWindow) return;
+		const promise = listen<string[]>("sheet_detected", (event) => {
+			const ids = event.payload;
+			if (ids.length === 1) {
+				loadSheet(ids[0]);
+			} else if (ids.length > 1) {
+				setSwitcherOpen(true);
+			}
+			// 0 → keep current sheet
+		});
+		return () => {
+			promise.then((unlisten) => unlisten());
+		};
+	}, [isSettingsWindow, loadSheet, setSwitcherOpen]);
 
 	// Watch for OS theme preference changes when theme is 'system'
 	useEffect(() => {

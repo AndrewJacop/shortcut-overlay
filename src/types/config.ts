@@ -33,6 +33,10 @@ export interface UserConfig {
 	overlay: OverlayConfig;
 	theme: "dark" | "light" | "system";
 	active_sheet: string;
+	/** Auto-select a sheet matching the focused window on each hotkey press. */
+	auto_detect: boolean;
+	/** When set, this sheet is shown regardless of the focused window. */
+	pinned_sheet: string | null;
 }
 
 /** Default UserConfig — mirrors Rust `UserConfig::default()`. */
@@ -50,4 +54,6 @@ export const DEFAULT_CONFIG: UserConfig = {
 	},
 	theme: "dark",
 	active_sheet: "tmux",
+	auto_detect: true,
+	pinned_sheet: null,
 };

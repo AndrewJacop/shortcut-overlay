@@ -30,6 +30,7 @@ const Overlay: FC = () => {
 		activeSheetId,
 		switchSheet,
 		currentConfig,
+		updateConfig,
 	} = useOverlayStore();
 
 	const fullscreen = currentConfig?.overlay.fullscreen ?? false;
@@ -57,6 +58,16 @@ const Overlay: FC = () => {
 		},
 		[activeSheetId, switchSheet, setActivePage, setSearchOpen],
 	);
+
+	// Pin the current sheet so it overrides auto-detection until unpinned.
+	const isPinned =
+		!!activeSheetId && currentConfig?.pinned_sheet === activeSheetId;
+	const handleTogglePin = useCallback(async () => {
+		if (!activeSheetId) return;
+		await updateConfig({
+			pinned_sheet: isPinned ? null : activeSheetId,
+		});
+	}, [activeSheetId, isPinned, updateConfig]);
 
 	// Keyboard handlers: Escape → close overlay, Ctrl+K → open switcher, / → open search
 	useEffect(() => {
@@ -158,6 +169,38 @@ const Overlay: FC = () => {
 					</kbd>
 				</button>
 				<div className="flex items-center gap-2">
+					{/* Pin button — only in auto-detect mode; manual mode already
+					    keeps the current sheet, so there's nothing to override. */}
+					{currentConfig?.auto_detect !== false && (
+						<button
+							onClick={() => void handleTogglePin()}
+							disabled={!activeSheetId}
+							className={`flex items-center gap-1 rounded px-1.5 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${isPinned ? "text-blue-600 dark:text-blue-400" : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-900 dark:hover:text-white"}`}
+							aria-label={isPinned ? "Unpin sheet" : "Pin this sheet"}
+							title={
+								isPinned
+									? "Pinned — auto-detection paused"
+									: "Pin this sheet (override auto-detect)"
+							}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill={isPinned ? "currentColor" : "none"}
+								stroke="currentColor"
+								strokeWidth={2}
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								className="h-4 w-4"
+							>
+								<line x1="12" y1="17" x2="12" y2="22" />
+								<path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" />
+							</svg>
+							{isPinned && (
+								<span className="text-[10px] font-medium">Pinned</span>
+							)}
+						</button>
+					)}
 					{/* Search button */}
 					<button
 						onClick={() => setSearchOpen(true)}

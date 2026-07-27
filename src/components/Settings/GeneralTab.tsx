@@ -139,6 +139,28 @@ const GeneralTab: FC = () => {
 					<HotkeyRecorder />
 				</section>
 
+				{/* Sheet detection section */}
+				<section>
+					<h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
+						Sheet detection
+					</h2>
+					<label className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-300">
+						<input
+							type="checkbox"
+							checked={currentConfig?.auto_detect ?? true}
+							onChange={(e) =>
+								void updateConfig({ auto_detect: e.target.checked })
+							}
+							className="accent-blue-600"
+						/>
+						Auto-select sheet for the focused window
+					</label>
+					<p className="mt-1.5 ml-6 text-xs text-zinc-400 dark:text-zinc-500">
+						When on, the overlay opens with the sheet matching the active app.
+						Pin a sheet to override this.
+					</p>
+				</section>
+
 				{/* Appearance section */}
 				<section>
 					<h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">

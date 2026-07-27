@@ -93,6 +93,15 @@ pub struct UserConfig {
     pub theme: String,
     #[serde(default = "default_active_sheet")]
     pub active_sheet: String,
+    /// When true (default), the overlay auto-selects a sheet matching the
+    /// focused window's process on each hotkey press. When false, the last
+    /// manually chosen sheet is always shown.
+    #[serde(default = "default_auto_detect")]
+    pub auto_detect: bool,
+    /// When set, this sheet is shown regardless of the focused window —
+    /// auto-detection is bypassed until it is cleared.
+    #[serde(default)]
+    pub pinned_sheet: Option<String>,
 }
 
 fn default_hotkey() -> String {
@@ -104,6 +113,9 @@ fn default_theme() -> String {
 fn default_active_sheet() -> String {
     "tmux".to_string()
 }
+fn default_auto_detect() -> bool {
+    true
+}
 
 impl Default for UserConfig {
     fn default() -> Self {
@@ -112,6 +124,8 @@ impl Default for UserConfig {
             overlay: OverlayConfig::default(),
             theme: default_theme(),
             active_sheet: default_active_sheet(),
+            auto_detect: default_auto_detect(),
+            pinned_sheet: None,
         }
     }
 }

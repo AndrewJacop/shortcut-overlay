@@ -1,12 +1,13 @@
 mod commands;
 mod config;
+mod detection;
 mod sheets;
 
 use config::{ConfigState, MonitorTarget, UserConfig};
 use sheets::SheetsState;
 use tauri::menu::{Menu, MenuItem};
 use tauri::tray::TrayIconBuilder;
-use tauri::{LogicalPosition, LogicalSize, Manager};
+use tauri::{Emitter, LogicalPosition, LogicalSize, Manager};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 
 /// Resolve the target monitor and return its geometry in logical pixels.
@@ -135,8 +136,64 @@ fn position_overlay(app: &tauri::AppHandle, cfg: &UserConfig) {
     }
 }
 
-/// Show the overlay: reposition (in case config or monitor changed), then focus.
+/// Resolve which sheet(s) the overlay should show and notify the frontend.
+///
+/// Implements the precedence **pin → detect → manual**, emitting a
+/// `sheet_detected` event carrying the matched sheet ids. The frontend applies:
+/// exactly 1 → switch to it; 0 → keep the current sheet (manual / last); >1 →
+/// open the SheetSwitcher.
+///
+/// MUST run before the overlay window takes focus, otherwise we'd detect our
+/// own window. Any detection failure (elevated target, no window) collapses to
+/// an empty match list so the overlay falls back to the last sheet.
+fn detect_and_notify(app: &tauri::AppHandle) {
+    let cfg = app.state::<ConfigState>().config.lock().unwrap().clone();
+
+    // Resolve the foreground app before locking sheets, so the (fast, blocking)
+    // native call isn't made while holding the lock. Only needed when
+    // auto-detect is on; skipped entirely when off.
+    let detected_app = if cfg.auto_detect {
+        detection::active_process_stem()
+    } else {
+        None
+    };
+
+    let ids: Vec<String> = {
+        // Bind State to a local so the MutexGuard outlives the temporary —
+        // borrowing `app.state().sheets.lock()` directly drops the State temp
+        // before the guard is used.
+        let sheets_state = app.state::<SheetsState>();
+        let sheets = sheets_state.sheets.lock().unwrap();
+        // Pin is meaningful only in auto-detect mode — in manual mode the
+        // current sheet already persists, so there's nothing to override.
+        // (Checking pin before this guard would let a lingering pin hijack
+        // manual selection.)
+        if !cfg.auto_detect {
+            Vec::new()
+        } else if let Some(id) = &cfg.pinned_sheet {
+            // Pin overrides detection; a dangling pin (uninstalled sheet)
+            // falls through to detection / fallback.
+            if sheets.contains_key(id) {
+                vec![id.clone()]
+            } else {
+                Vec::new()
+            }
+        } else if let Some(name) = detected_app {
+            detection::match_sheets(&name, &sheets)
+        } else {
+            Vec::new()
+        }
+    };
+
+    let _ = app.emit("sheet_detected", &ids);
+}
+
+/// Show the overlay: detect which sheet to show, reposition (in case config or
+/// monitor changed), then focus. Detection lives here so every show path
+/// (hotkey + tray) is consistent — and runs before the window takes focus so we
+/// don't detect ourselves.
 fn show_overlay(app: &tauri::AppHandle) {
+    detect_and_notify(app);
     let cfg = app.state::<ConfigState>().config.lock().unwrap().clone();
     position_overlay(app, &cfg);
     if let Some(w) = app.get_webview_window("main") {

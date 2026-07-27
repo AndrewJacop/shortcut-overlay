@@ -194,6 +194,27 @@ pub fn uninstall_sheet(
         }
     }
 
+    // Orphan-clear: if the removed sheet was pinned, drop the pin so a later
+    // reinstall of the same id doesn't silently re-pin it.
+    let cleared_config = {
+        let cfg_state = app.state::<crate::config::ConfigState>();
+        let mut cfg = cfg_state
+            .config
+            .lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+        if cfg.pinned_sheet.as_deref() == Some(app_id.as_str()) {
+            cfg.pinned_sheet = None;
+            Some(cfg.clone())
+        } else {
+            None
+        }
+    };
+    if let Some(new_cfg) = cleared_config {
+        crate::config::save_config(&app, &new_cfg).map_err(|e| e.to_string())?;
+        app.emit("config_updated", &new_cfg)
+            .map_err(|e| e.to_string())?;
+    }
+
     app.emit("sheets_updated", ()).map_err(|e| e.to_string())?;
     Ok(())
 }

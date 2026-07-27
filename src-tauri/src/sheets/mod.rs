@@ -69,9 +69,17 @@ pub struct Page {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Section {
     pub name: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", deserialize_with = "deserialize_grid_indices")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "deserialize_grid_indices"
+    )]
     pub column: Option<Vec<u32>>,
-    #[serde(default, skip_serializing_if = "Option::is_none", deserialize_with = "deserialize_grid_indices")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "deserialize_grid_indices"
+    )]
     pub row: Option<Vec<u32>>,
     pub shortcuts: Vec<Shortcut>,
 }
@@ -259,8 +267,7 @@ fn parse_sheet_yaml(content: &str) -> Result<RawSheet, String> {
         serde_yaml::from_str(content).map_err(|e| format!("YAML parse error: {}", e))?;
     let from = read_schema_version(&value);
     let migrated = migrate_to_current(value, from)?;
-    serde_yaml::from_value::<RawSheet>(migrated)
-        .map_err(|e| format!("YAML parse error: {}", e))
+    serde_yaml::from_value::<RawSheet>(migrated).map_err(|e| format!("YAML parse error: {}", e))
 }
 
 // ---------------------------------------------------------------------------
@@ -357,10 +364,18 @@ pub(crate) fn validate_and_parse_sheet(content: &str) -> Result<(Sheet, SheetMet
 fn validate_shortcuts(shortcuts: &[Shortcut], label: &str) -> Result<(), String> {
     for (si, shortcut) in shortcuts.iter().enumerate() {
         if shortcut.keys.is_empty() {
-            return Err(format!("{} shortcut {}: missing or empty 'keys'", label, si + 1));
+            return Err(format!(
+                "{} shortcut {}: missing or empty 'keys'",
+                label,
+                si + 1
+            ));
         }
         if shortcut.description.trim().is_empty() {
-            return Err(format!("{} shortcut {}: missing 'description'", label, si + 1));
+            return Err(format!(
+                "{} shortcut {}: missing 'description'",
+                label,
+                si + 1
+            ));
         }
     }
     Ok(())
@@ -375,7 +390,10 @@ fn validate_sections(sections: &[Section], page_label: &str) -> Result<(), Strin
             return Err(format!("{}: missing 'name' field", page_label));
         }
         if section.shortcuts.is_empty() {
-            return Err(format!("{}: must have at least one shortcut", section_label));
+            return Err(format!(
+                "{}: must have at least one shortcut",
+                section_label
+            ));
         }
         validate_shortcuts(&section.shortcuts, &section_label)?;
         if let Some(cols) = &section.column {
