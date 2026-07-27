@@ -99,7 +99,7 @@ const Overlay: FC = () => {
 	if (!sheet) {
 		return (
 			<div
-				className={`relative flex h-screen w-screen flex-col ${fullscreen ? "rounded-none" : "rounded-xl"} backdrop-blur-md overflow-hidden animate-pulse`}
+				className={`relative flex h-screen w-screen flex-col ${fullscreen ? "rounded-none pt-8 px-6 pb-6" : "rounded-xl"} backdrop-blur-md overflow-hidden animate-pulse`}
 				style={{
 					backgroundColor: `rgba(var(--overlay-bg-rgb), ${overlayOpacity})`,
 				}}
@@ -134,7 +134,7 @@ const Overlay: FC = () => {
 	const activePageData = sheet.pages[activePage] ?? sheet.pages[0];
 	return (
 		<div
-			className={`relative flex h-screen w-screen flex-col ${fullscreen ? "rounded-none shadow-none" : "rounded-xl shadow-2xl"} backdrop-blur-md text-zinc-900 dark:text-white overflow-hidden`}
+			className={`relative flex h-screen w-screen flex-col ${fullscreen ? "rounded-none shadow-none pt-8 px-6 pb-6" : "rounded-xl shadow-2xl"} backdrop-blur-md text-zinc-900 dark:text-white overflow-hidden`}
 			style={{
 				backgroundColor: `rgba(var(--overlay-bg-rgb), ${overlayOpacity})`,
 			}}
