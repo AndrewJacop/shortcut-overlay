@@ -274,7 +274,7 @@ const Overlay: FC = () => {
 
 					{/* Shortcut grid */}
 					<div className="flex-1 overflow-y-auto">
-						<ShortcutGrid shortcuts={activePageData.shortcuts} />
+						<ShortcutGrid page={activePageData} />
 					</div>
 				</>
 			)}

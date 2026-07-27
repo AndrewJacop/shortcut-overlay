@@ -11,8 +11,16 @@ app: tmux
 # Required. Human-readable name displayed in the overlay UI.
 display_name: tmux
 
-# Optional. Semantic version of this sheet file.
+# Optional. Content version of this sheet file (author's semver, e.g. "1.0.0").
+# This is the SHEET's own version — do not confuse with `schema_version` below.
 version: "1.0.0"
+
+# Optional. Schema revision this sheet targets (integer). Absent ⇒ 1 (the
+# legacy flat-shortcuts format). The app migrates older sheets forward
+# automatically, and refuses sheets newer than it understands. Current: 2.
+#   v1 — flat `shortcuts` per page (no sections/grid)
+#   v2 — adds optional `sections` + grid layout (this change)
+schema_version: 2
 
 # Optional. Author or contributor attribution.
 author: "community"
@@ -20,7 +28,7 @@ author: "community"
 # Optional. Application icon displayed in the overlay header.
 # Supports multiple icon types:
 icon:
-  type: url                        # "url" | "path" | "emoji" | "bundled"
+  type: url # "url" | "path" | "emoji" | "bundled"
   value: "https://..."
 # Shorthand emoji form is also accepted:
 # icon: "🖥️"
@@ -32,6 +40,11 @@ match:
   - tmux:server
 
 # Required. Array of pages, each displayed as a tab in the overlay.
+#
+# A page renders its shortcuts in ONE of two ways:
+#   1. Flat — a single key|description list via `shortcuts` (v1, default).
+#   2. Sections — titled groups arranged on a grid via `sections`. When
+#      `sections` is present, it wins and `shortcuts` is ignored.
 pages:
   - # Required. Tab label shown in the page navigation.
     name: Sessions
@@ -63,6 +76,44 @@ pages:
         description: Split pane vertically
         tags: [pane, split]
 
-      - keys: ["Ctrl+B", "\""]
+      - keys: ["Ctrl+B", '"']
         description: Split pane horizontally
         tags: [pane, split]
+
+# ---------------------------------------------------------------------------
+# Sections layout (schema_version: 2)
+# ---------------------------------------------------------------------------
+# A page may split its shortcuts into titled sections arranged on a grid.
+#
+#   columns:  grid column count (optional; omitted → sections stack vertically)
+#   sections: array of groups, each with:
+#     name:      section title (required)
+#     column:    grid column indices this section fills, 0-based. Single int or
+#                array. `column: 1` ≡ `column: [1]`; `column: [0,1]` spans two.
+#                Omit to let CSS auto-flow the column.
+#     row:       grid row indices this section fills, 0-based (same rules).
+#                Omit to auto-flow the row.
+#     shortcuts: array of shortcuts (required, ≥1)
+#
+# Index arrays must be contiguous ascending (e.g. [0,1,2], not [0,2]). No two
+# sections may claim the same grid cell. Sections that omit an axis auto-flow.
+#
+# Example — a 2-column page: a wide left section spanning two rows beside a
+# narrow right section:
+#
+# pages:
+#   - name: Layout
+#     columns: 2
+#     sections:
+#       - name: Navigation
+#         column: [0]
+#         row: [0, 1]          # tall: spans both rows in column 0
+#         shortcuts:
+#           - keys: ["Ctrl+B", "c"]
+#             description: Create window
+#       - name: Resizing
+#         column: 1             # single-int shorthand ≡ [1]
+#         row: 0
+#         shortcuts:
+#           - keys: ["Ctrl+B", "z"]
+#             description: Zoom current pane
