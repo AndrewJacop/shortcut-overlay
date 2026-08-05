@@ -1,0 +1,178 @@
+app: explorer
+display_name: Windows Explorer
+version: "1.0.0"
+schema_version: 2
+author: "community"
+icon: "📁"
+
+match:
+  - explorer
+
+pages:
+  - name: Navigation
+    columns: 2
+    sections:
+      - name: Go
+        column: 0
+        row: 0
+        shortcuts:
+          - keys: ["Alt+Up"]
+            description: Go up one folder level
+            tags: [navigate]
+          - keys: ["Alt+Left"]
+            description: Go back
+            tags: [navigate, back]
+          - keys: ["Alt+Right"]
+            description: Go forward
+            tags: [navigate, forward]
+          - keys: ["Backspace"]
+            description: Go to previous folder (when not editing)
+            tags: [navigate, back]
+          - keys: ["Alt+D"]
+            description: Select address bar
+            tags: [address]
+          - keys: ["Ctrl+L"]
+            description: Select address bar (alternative)
+            tags: [address]
+          - keys: ["F4"]
+            description: Show address bar path dropdown
+            tags: [address]
+      - name: Find & Panes
+        column: 1
+        row: 0
+        shortcuts:
+          - keys: ["Ctrl+E"]
+            description: Focus search box
+            tags: [search]
+          - keys: ["Ctrl+F"]
+            description: Focus search box (alternative)
+            tags: [search]
+          - keys: ["F3"]
+            description: Focus search box
+            tags: [search]
+          - keys: ["Ctrl+Shift+E"]
+            description: Expand all folders in nav pane
+            tags: [nav-pane]
+          - keys: ["Ctrl+N"]
+            description: Open new window
+            tags: [window]
+          - keys: ["Ctrl+Shift+N"]
+            description: Open current path in new window
+            tags: [window]
+
+  - name: File Ops
+    shortcuts:
+      - keys: ["Ctrl+C"]
+        description: Copy selected
+        tags: [copy]
+      - keys: ["Ctrl+X"]
+        description: Cut selected
+        tags: [cut]
+      - keys: ["Ctrl+V"]
+        description: Paste
+        tags: [paste]
+      - keys: ["Ctrl+Z"]
+        description: Undo last action
+        tags: [undo]
+      - keys: ["Ctrl+Y"]
+        description: Redo
+        tags: [redo]
+      - keys: ["Ctrl+A"]
+        description: Select all items
+        tags: [select]
+      - keys: ["Ctrl+Shift+N"]
+        description: New folder
+        tags: [new, folder]
+      - keys: ["F2"]
+        description: Rename selected
+        tags: [rename]
+      - keys: ["Delete"]
+        description: Move to Recycle Bin
+        tags: [delete]
+      - keys: ["Shift+Delete"]
+        description: Delete permanently (bypass Recycle Bin)
+        tags: [delete, permanent]
+      - keys: ["Alt+Enter"]
+        description: Open Properties
+        tags: [properties]
+      - keys: ["Enter"]
+        description: Open selected
+        tags: [open]
+
+  - name: Selection
+    shortcuts:
+      - keys: ["Ctrl+Click"]
+        description: Add item to / remove from selection
+        tags: [select]
+      - keys: ["Shift+Click"]
+        description: Select a range of items
+        tags: [select, range]
+      - keys: ["Ctrl+Space"]
+        description: Toggle item selection
+        tags: [select]
+      - keys: ["Ctrl+A"]
+        description: Select all
+        tags: [select, all]
+      - keys: ["Esc"]
+        description: Clear selection
+        tags: [select, clear]
+
+  - name: View
+    shortcuts:
+      - keys: ["Ctrl+Mouse Wheel"]
+        description: Change icon/file size in current view
+        tags: [view]
+      - keys: ["Ctrl+Shift+1"]
+        description: Extra large icons view
+        tags: [view, icons]
+      - keys: ["Ctrl+Shift+2"]
+        description: Large icons view
+        tags: [view, icons]
+      - keys: ["Ctrl+Shift+3"]
+        description: Medium icons view
+        tags: [view, icons]
+      - keys: ["Ctrl+Shift+4"]
+        description: Small icons view
+        tags: [view, icons]
+      - keys: ["Ctrl+Shift+5"]
+        description: List view
+        tags: [view, list]
+      - keys: ["Ctrl+Shift+6"]
+        description: Details view
+        tags: [view, details]
+      - keys: ["Ctrl+Shift+7"]
+        description: Tiles view
+        tags: [view, tiles]
+      - keys: ["Ctrl+Shift+8"]
+        description: Content view
+        tags: [view, content]
+      - keys: ["F11"]
+        description: Toggle full screen
+        tags: [fullscreen]
+      - keys: ["Alt"]
+        description: Show menu / keytips
+        tags: [menu]
+
+  - name: Tabs (Windows 11)
+    shortcuts:
+      - keys: ["Ctrl+T"]
+        description: New tab
+        tags: [tab, new]
+      - keys: ["Ctrl+W"]
+        description: Close current tab
+        tags: [tab, close]
+      - keys: ["Ctrl+Shift+T"]
+        description: Reopen closed tab
+        tags: [tab, restore]
+      - keys: ["Ctrl+Tab"]
+        description: Next tab
+        tags: [tab, navigate]
+      - keys: ["Ctrl+Shift+Tab"]
+        description: Previous tab
+        tags: [tab, navigate]
+      - keys: ["Ctrl+1"]
+        description: Go to 1st tab
+        tags: [tab, navigate]
+      - keys: ["Ctrl+9"]
+        description: Go to last tab
+        tags: [tab, navigate]
